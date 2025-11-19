@@ -1,0 +1,11 @@
+To create now project : npm create vite@latest project name  -- --template react
+Clear files (css files and app.jsx)
+Import icons cdn links etc...
+create a page folder and create components inside the page folder
+  - The component name should be starts in capital letter with extention .jsx
+To set path intsall react router-dom for page redirection
+  - npm i react-router-dom
+  - import BrowserRouter in main.jsx
+  - wrap app in BrowserRouter  (in the main.jsx)
+  - in app.jsx mports components inside the router wrap
+  - create componet folder and create header footer inside the component folder
