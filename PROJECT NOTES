@@ -1,11 +1,130 @@
-To create now project : npm create vite@latest project name  -- --template react
-Clear files (css files and app.jsx)
-Import icons cdn links etc...
-create a page folder and create components inside the page folder
-  - The component name should be starts in capital letter with extention .jsx
-To set path intsall react router-dom for page redirection
+1. To create now project : npm create vite@latest tapit-store -- --template react
+2. Clear files (css files and app.jsx)
+3. intsall pages
+fontawesome - https://docs.fontawesome.com/v5/web/use-with/react
+react bootstrap - https://react-bootstrap.github.io/docs/getting-started/introduction
+react theam - https://bootswatch.com/(download bootstrap.min.css format and copypaste in src folder) then import it on main.jsx
+4. create a page folder and create components inside the page folder
+  - The component name should be starts in capital letter with extention .jsx (rfce structure load)
+5. To set path intsall react router-dom for page redirection
   - npm i react-router-dom
   - import BrowserRouter in main.jsx
   - wrap app in BrowserRouter  (in the main.jsx)
-  - in app.jsx mports components inside the router wrap
+  - in app.jsx imports components inside the routes set path with route
+    <Routes>
+        <Route path ='/' element={<Home/>}/>
+        <Route path='/cart'element={<Cart/>}/>
+        <Route path='/*' element={<Pnf/>}/>
+      </Routes>
   - create componet folder and create header footer inside the component folder
+  
+  
+  REDUX
+  -----
+
+  - actions are used to upadte state values in store
+  - the output of action in reducer
+  - to access values from store : action dispatch
+    useSelector hook used to dispatch
+       
+  used to avoid props drilling (lifting method connects multiple componets to share data)
+  redux create a storage space and provide data to components
+  to install:
+  redux-cart>npm install @reduxjs/toolkit
+  npm i react-redux
+  wrap the app function with provider (for provide redux store data to all components)
+  <BrowserRouter>
+      <Provider store={name-of-main-store}>
+        <App />
+       </Provider> 
+    </BrowserRouter>
+     
+- create redux folder
+- create a main store(nameStore)
+
+    const productStore = configureStore({
+    reducer:{
+        productReducer : productSlice
+    }
+})
+
+export default productStore
+- the create a folder slice inside the redux
+- create needed slices(product,cartetc.. like slices)
+
+   const productSlice = createSlice({
+    name :'products',
+    initialState:{
+        allProducts:[]
+    }
+   })
+
+- now the value of product reducer is all product
+
+AXIOS api call
+--------------
+
+api call is asynchronus(take delay to fetch data) so it cant do with reducer so
+
+- create like this
+
+   export const getAllProducts = createAsyncThunk('products/getAllProducts',async()=>{
+    const result = await axios.get("https://dummyjson.com/carts")
+   })
+  
+ - createAsyncThunk -action with asynchrouns function is called createAsyncThunk
+ - product - it is in productslice name :'products',
+  product means the value assigned to productSlice and in main store the value assigned to product reducer
+ - getallproducts which page need the data they can call
+ - axios for api call(get,put,post..) 
+
+ - if a page need products call the getAllProduct function
+
+ function Home() {
+  const dispatch = useDispatch()// for useEffect to call function
+
+  useEffect(()=>{
+    dispatch(getAllProducts) // the function call to get all products 
+  },[])
+ }
+
+- useDispatch() → allows us to send actions to Redux.
+
+- useEffect() → runs only once when the page loads.
+
+- dispatch(getAllProducts()) → calls the async function to fetch all products and store them in Redux.
+
+extraReducer 
+------------
+createAsyncThunk to fetch data asynchronously, and then use extraReducers in a Redux slice to handle the thunk’s actions (pending / fulfilled / rejected) and update the Redux state.
+
+  extraReducers:(builder)=>{
+        builder.addCase(getAllProducts.fulfilled,(state,action)=>{   
+            state.allProducts = action.payload - where the all product state is upadted
+        }) }
+
+action.payload = fetched data from api call (result.data.carts)
+
+- but also upadte the loading and error states :-
+
+upate initialState:{
+        allProducts:[], fullfilled
+        loading:true,   loading
+        error:""        rejected 
+    },
+
+- to upadate state with respect to case :
+
+builder.addCase(getAllProducts.fulfilled,(state,action)=>{   // action (function call) with fullfiled condition
+            state.allProducts = action.payload
+            state.loading =false
+            state.error=""
+        }) 
+now we get the data in redux store
+
+- to get data to componet (upadte data)
+  
+  import useselector
+
+    const {loading,getAllProducts,error}=useSelector(state=>state.productReducer)
+    in productReducer have object with 3 keys - loading,getAllProducts,error
