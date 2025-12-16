@@ -128,3 +128,11 @@ now we get the data in redux store
 
     const {loading,getAllProducts,error}=useSelector(state=>state.productReducer)
     in productReducer have object with 3 keys - loading,getAllProducts,error
+
+
+  NODE.JS
+  --------
+Create a server folder 
+create package.json using npm init -y
+open the package.json and update the scripts : add this - "start":"node index.js",
+create .env file, which is used to store enviornmental variables of project
